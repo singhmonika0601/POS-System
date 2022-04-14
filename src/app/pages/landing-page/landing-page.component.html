@@ -1,0 +1,155 @@
+<div class="container-fluid mt-3">
+    <div class="row">
+     <div class="card p-3 shadow-lg p-3 mb-5 bg-white rounded">
+      <div class="col-md-12">
+        <h2 class="text-center font-weight-bold">POINT OF SALES <b>(POS)</b> SYSTEM</h2>
+      </div>
+     </div>
+    </div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-5 mt-2">
+             <div class="card p-3 shadow-lg p-3 mb-5 bg-white rounded">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                  <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-responsive-md dt-responsive table-striped row-border hover tbl-sty dataTable no-footer">
+                      <thead>
+                          <tr>
+                              <th>PRODUCTS</th>
+                              <th>PRICE</th>
+                              <th>QUANTITY</th>
+                              <th>TOTAL</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let item of productDt; index as i">
+                              <td class="ml-3" (click)="removeProductFromProductList(i)"><i class="fas fa-times-circle text-danger mr-5" style="font-size: 25px;"></i>{{ item.productName }}</td>
+                              <td>{{ item.price }}</td>
+                              <td> <button class="btn btn-primary btn-sm ml-1" (click)="addToCart(i,item.id,item.price)"><i class="fa fa-plus"></i></button> <button class="btn btn-sm ml-1">{{getQuantity(i)}} </button> <button class="btn btn-danger btn-sm ml-2" (click)="removeFromCart(i,item.id)"><i class="fa fa-minus"></i></button></td>
+                              <td>{{ getQuantity(i)*item.price}} INR</td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  <div class="alert alert-secondary text-center" *ngIf="productDt.length === 0">
+                   <b> THERE ARE NO PRODUCTS</b>
+                  </div>
+                  </div>
+                 </div>
+                  <div class="row mt-5">
+                    <div class="col-md-12">
+                      <table class="table table-bordered">
+                        <tr>
+                            <td class="heading border-left"><b>SubTotal</b></td>
+                            <td class="px-5">{{ sub_total }} EUR</td>
+                            <td>item {{ totalcartvalue }}</td>
+                        </tr>
+                        <tr>
+                          <td class="heading border-left"><b>VAT tax</b></td>
+                            <td class="px-5">10%</td>
+                            <td>{{ sub_total/100*10 }}</td>
+                        </tr>
+                        <tr>
+                          <td class="heading border-left"><b>Discount</b></td>
+                            <td class="px-5">10%</td>
+                            <td> {{ sub_total/100*10 }}</td>
+                        </tr>
+                        <tr>
+                          <td class="heading border-left"><b>Total</b></td>
+                          <td class="px-5">{{ sub_total+sub_total/100*10+sub_total/100*10 }} EUR </td>
+                        </tr>
+                  </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                 <div class="text-center" style="display: flex;">
+                   <div class="col-md-6">
+                    <button class="btn btn-danger btn-class ml-5" (click)="cancelSale()" type="button">CANCEL SALE</button>
+                   </div>
+                   <div class="col-md-6">
+                  <button class="btn btn-success btn-class" (click)="processSale()" type="button">PROCESS SALE</button>
+                   </div>
+                 </div>
+                </div>
+              </div>
+             </div>
+            </div>
+            <div class="col-md-7 mt-2">
+                <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                  <div class="row">
+                    <div class="col-md-2 py-4 px-4" *ngFor="let item of products; index as i">
+                      <div class="card card-1 {{ item.images }}" style="height:110px;"  (click)="addToCart(i,item.id,item.price)">
+                        <div class="card-body">
+                          <h5 class="card-title text-white" style="font-size: 15px;">{{ item.productName | uppercase}}</h5>
+                         </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="processModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header bg-info">
+              <h5 class="modal-title" id="exampleModalLabel">Receipt</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+          </div>
+          <div class="modal-body">
+             <h5>SALE NO.  : 00102</h5>
+             <p class="font-weight-bold text-danger">Date : {{ date }}</p>
+              <form>
+                  <div class="col-md-12">
+                    <table class="table table-sm table-bordered table-responsive-md dt-responsive table-striped row-border hover tbl-sty dataTable no-footer">
+                      <thead>
+                          <tr>
+                            <th>#</th>
+                              <th>PRODUCTS</th>
+                              <th>Quantity</th>
+                              <th>TOTAL</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let item of productDt; index as i">
+                            <td>{{ i+1 }}</td>
+                              <td>{{ item.productName }}</td>
+                              <td><button class="btn btn-sm ml-1">{{ getQuantity(i) }} </button></td>
+                              <td>{{ getQuantity(i)*item.price}} INR</td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  </div>
+                  <div class="row mt-5">
+                    <div class="col-md-12 m-auto">
+                      <table class="table table-bordered">
+                        <tr>
+                            <td class="heading"><b>Total Items</b></td>
+                            <td><b class="float-right css ml-5">item {{ totalcartvalue }}</b></td>
+                            <td>{{ sub_total+sub_total/100*10+sub_total/100*10 }} EUR </td>
+                        </tr>
+                        <tr>
+                          <td class="heading border-left"><b>VAT tax</b></td>
+                            <td class="px-5">10%</td>
+                        </tr>
+                        <tr>
+                          <td class="heading border-left"><b>Discount</b></td>
+                            <td class="px-5">10%</td>
+                        </tr>
+                  </table>
+                    </div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
